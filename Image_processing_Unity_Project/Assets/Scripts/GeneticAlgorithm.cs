@@ -5,43 +5,41 @@
 using System;
 using System.Collections.Generic;
 
-public class GeneticAlgorithm<T>
+public class GeneticAlgorithm
 {
-	public List<DNA<T>> Population { get; private set; }
+	public List<DNA> Population { get; private set; }
 	public int Generation { get; private set; }
 	public float BestFitness { get; private set; }
-	public T[] BestGenes { get; private set; }
+	public float[] BestGenes { get; private set; }
 
 	public int Elitism;
 	public float MutationRate;
 
-	private List<DNA<T>> newPopulation;
+	private List<DNA> newPopulation;
 	private Random random;
 	private float fitnessSum;
 	private int dnaSize;
-	private Func<T> getRandomGene;
-	private Func<int, float> fitnessFunction;
+	private Func<float> getRandomGene;
 
 	//Constructor
-	public GeneticAlgorithm(int populationSize, int dnaSize, Random random, Func<T> getRandomGene, Func<int, float> fitnessFunction,
+	public GeneticAlgorithm(int populationSize, int dnaSize, Random random, Func<float> getRandomGene,
 		int elitism, float mutationRate = 0.01f)
 	{
 		Generation = 1;
 		Elitism = elitism;
 		MutationRate = mutationRate;
-		Population = new List<DNA<T>>(populationSize);
-		newPopulation = new List<DNA<T>>(populationSize);
+		Population = new List<DNA>(populationSize);
+		newPopulation = new List<DNA>(populationSize);
 		this.random = random;
 		this.dnaSize = dnaSize;
 		this.getRandomGene = getRandomGene;
-		this.fitnessFunction = fitnessFunction;
 
-		BestGenes = new T[dnaSize];
+		BestGenes = new float[dnaSize];
 
 		//Create DNA for first generation randomly
 		for (int i = 0; i < populationSize; i++)
 		{
-			Population.Add(new DNA<T>(dnaSize, random, getRandomGene, fitnessFunction, shouldInitGenes: true));
+			Population.Add(new DNA(dnaSize, random, getRandomGene, shouldInitGenes: true));
 		}
 	}
 
@@ -69,10 +67,10 @@ public class GeneticAlgorithm<T>
 			}
 			else if (i < Population.Count || crossoverNewDNA) //crossoverNewDNA decides if new non elite members are crosss over or fresh
 			{
-				DNA<T> parent1 = ChooseParent();
-				DNA<T> parent2 = ChooseParent();
+				DNA parent1 = ChooseParent();
+				DNA parent2 = ChooseParent();
 
-				DNA<T> child = parent1.Crossover(parent2);
+				DNA child = parent1.Crossover(parent2);
 
 				child.Mutate(MutationRate);
 
@@ -80,11 +78,11 @@ public class GeneticAlgorithm<T>
 			}
 			else
 			{
-				newPopulation.Add(new DNA<T>(dnaSize, random, getRandomGene, fitnessFunction, shouldInitGenes: true));
+				newPopulation.Add(new DNA(dnaSize, random, getRandomGene, shouldInitGenes: true));
 			}
 		}
 
-		List<DNA<T>> tmpList = Population;
+		List<DNA> tmpList = Population;
 		Population = newPopulation;
 		newPopulation = tmpList;
 
@@ -92,7 +90,7 @@ public class GeneticAlgorithm<T>
 	}
 
 	//Compares two DNAs for fitness
-	private int CompareDNA(DNA<T> a, DNA<T> b)
+	private int CompareDNA(DNA a, DNA b)
 	{
 		if (a.Fitness > b.Fitness)
 		{
@@ -111,16 +109,16 @@ public class GeneticAlgorithm<T>
 	private void CalculateFitness()
 	{
 		fitnessSum = 0;
-		DNA<T> best = Population[0];
+		DNA best = Population[0];
 
 		//Calculating fitness
-		Run_Simulaton<T> sim = new Run_Simulaton<T>(Population);
+		Run_Simulaton sim = new Run_Simulaton(Population);
 		float[] Calculated_Fitness = sim.Calculated_Fitness;
 
 		for (int i = 0; i < Population.Count; i++)
 		{
 			Population[i].Fitness = Calculated_Fitness[i];
-			fitnessSum += Population[i].Fitness; // CalculateFitness from DNA object
+			fitnessSum += Population[i].Fitness; // Read fitness from DNA object
 
 			if (Population[i].Fitness > best.Fitness)
 			{
@@ -133,7 +131,7 @@ public class GeneticAlgorithm<T>
 	}
 
 	// Pick a random element
-	private DNA<T> ChooseParent()
+	private DNA ChooseParent()
 	{
 		double randomNumber = random.NextDouble() * fitnessSum;
 

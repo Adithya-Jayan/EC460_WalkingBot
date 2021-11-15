@@ -26,7 +26,7 @@ public class Main_Code : MonoBehaviour
 	//[SerializeField] Transform populationTextParent;
 	//[SerializeField] Text textPrefab;
 
-	private GeneticAlgorithm<float> ga; // T is char here (We'll need to change it)
+	private GeneticAlgorithm ga; // T is char here (We'll need to change it)
 	private System.Random random;
 
 	void Start()
@@ -41,7 +41,7 @@ public class Main_Code : MonoBehaviour
 		*/
 
 		random = new System.Random();
-		ga = new GeneticAlgorithm<float>(populationSize, targetString.Length, random, GetRandomWeight, FitnessFunction, elitism, mutationRate);
+		ga = new GeneticAlgorithm(populationSize, targetString.Length, random, GetRandomWeight, elitism, mutationRate);
 		// Change parameters above!!!
 	}
 
@@ -64,30 +64,6 @@ public class Main_Code : MonoBehaviour
 		return i;
 	}
 
-	private float FitnessFunction(int index) //Fitness calculation (Simulation part done here)
-	{
-		float score = 0;
-		DNA<float> dna = ga.Population[index];
-
-
-		//Calculate score of everyone in this generation
-		for (int i = 0; i < dna.Genes.Length; i++)
-		{
-		score = CalculateScore(dna.Genes);
-		}
-
-		//Normalize score
-		score /= targetString.Length;
-		score = (Mathf.Pow(2, score) - 1) / (2 - 1);
-
-		return score;
-	}
-
-
-	private float[] CalculateScore(float[] Genes)
-	{
-		return Genes;
-	}
 
 
 

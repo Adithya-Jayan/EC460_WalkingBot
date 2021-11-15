@@ -4,26 +4,24 @@
 
 using System;
 
-public class DNA<T> //<T> defines a generic datatype as input
+public class DNA //<T> defines a generic datatype as input
 {
-	public T[] Genes { get; private set; } 
+	public float[] Genes { get; private set; } 
 	//Variable Genes of type T, get => can be read from anywhere, private set => Can only be set locally
 	public float Fitness { get; set; }
 
 	//Defining functions
 	private Random random;
-	private Func<T> getRandomGene;
-	private Func<int, float> fitnessFunction;
+	private Func<float> getRandomGene;
 
 	//Constructor
-	public DNA(int size, Random random, Func<T> getRandomGene, Func<int, float> fitnessFunction, bool shouldInitGenes = true)
+	public DNA(int size, Random random, Func<float> getRandomGene,  bool shouldInitGenes = true)
 	{
-		Genes = new T[size]; 
+		Genes = new float[size]; 
 
 		//Create local copy of variables
 		this.random = random;
 		this.getRandomGene = getRandomGene;
-		this.fitnessFunction = fitnessFunction;
 
 		//Initialise genes
 		if (shouldInitGenes)
@@ -36,9 +34,9 @@ public class DNA<T> //<T> defines a generic datatype as input
 	}
 
 	//Mix two parents
-	public DNA<T> Crossover(DNA<T> otherParent)
+	public DNA Crossover(DNA otherParent)
 	{
-		DNA<T> child = new DNA<T>(Genes.Length, random, getRandomGene, fitnessFunction, shouldInitGenes: false);
+		DNA child = new DNA(Genes.Length, random, getRandomGene, shouldInitGenes: false);
 
 		for (int i = 0; i < Genes.Length; i++)
 		{

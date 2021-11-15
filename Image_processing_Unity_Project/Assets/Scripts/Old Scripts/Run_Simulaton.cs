@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Run_Simulaton<T> : MonoBehaviour
+public class Run_Simulaton : MonoBehaviour
 {
     
     public float[] Calculated_Fitness;
@@ -13,7 +13,7 @@ public class Run_Simulaton<T> : MonoBehaviour
     [SerializeField] Transform Position_reference;
     [SerializeField] double duration;
 
-    public Run_Simulaton(List<DNA<T>> Pop)
+    public Run_Simulaton(List<DNA> Pop)
     {
         Vector3 current_pos;
 
@@ -23,28 +23,33 @@ public class Run_Simulaton<T> : MonoBehaviour
             current_pos = new Vector3(0.0f, 0.0f, field_size * i);
             Position_reference.position = current_pos;
             ObjectList.Add(Instantiate(WalkerPrefab, Position_reference));
-            ObjectList[-1].GetComponent<NN_Brain<T>>().Init(Pop[i], duration);
+            ObjectList[-1].GetComponent<NN_Brain>().Init(Pop[i], duration);
         }
-
-        //Starts timer
-        double start_t = Time.time;
-        //Stops timer at time T
-        while ((Time.time - start_t) < duration );
 
         float sum = 0f;
         //Obtain score from brain
+
         for (int i = 0; i < Pop.Count; i++)
         {
-            Calculated_Fitness[i] = ObjectList[i].GetComponent<NN_Brain<T>>().score;
+            while (!ObjectList[i].GetComponent<NN_Brain>().Completed) ; //Wait till calculation is complete
+
+            Calculated_Fitness[i] = ObjectList[i].GetComponent<NN_Brain>().score;
             sum += Calculated_Fitness[i];
         }
         //Incorporate normalization
-
-            //Delete all the objects
-
-            //return scores
-            //Calculated_Fitness = ACDC
+        for (int i = 0; i < Pop.Count; i++)
+        {
+            Calculated_Fitness[i] = Calculated_Fitness[i]/ sum;
         }
+
+        //Delete all the objects
+        for (int i = 0; i < Pop.Count; i++)
+        {
+            Destroy(ObjectList[i]);
+        }
+        ObjectList.Clear();
+
+    }
 
     void Start()
     {
