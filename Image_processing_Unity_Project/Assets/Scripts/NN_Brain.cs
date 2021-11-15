@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class NN_Brain : MonoBehaviour
+public class NN_Brain<T> : MonoBehaviour
 {
+    public bool wait = true;
+
     public GameObject LowerLeg_L;
     public GameObject LowerLeg_R;
     public GameObject UpperLeg_L;
@@ -12,8 +13,16 @@ public class NN_Brain : MonoBehaviour
     public GameObject Torso;
 
     int[] Weights_shape = {30, 25, 20, 16, 8, 4 };
+    float[] Weights;
 
-    float[,] Weights;
+    public void Init(DNA<T> dna, double duration)
+    {
+
+        //Assign weights
+
+        wait = false;
+    }
+
 
     float[] Read_inputs()
     {
@@ -71,22 +80,26 @@ public class NN_Brain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float[] Inputs = Read_inputs();
+        //Incorporate height of head into the score calculation. (Along with time obviously)
 
-        float[] Layer_input = Inputs;
-        float[] Layer_output;
-   
-        //Propogate Inputs through layers
-        for (int i = 1; i < Weights_shape.Length; i++)
+        if (wait == false)
         {
-            for (int j = 0; j < Weights_shape[i-1]; j++)
+            float[] Inputs = Read_inputs();
+
+            float[] Layer_input = Inputs;
+            float[] Layer_output;
+
+            //Propogate Inputs through layers
+            for (int i = 1; i < Weights_shape.Length; i++)
             {
-                for (int p = 0; p < Layer_input.Length; p++)
+                for (int j = 0; j < Weights_shape[i - 1]; j++)
                 {
-                    
+                    for (int p = 0; p < Layer_input.Length; p++)
+                    {
+
+                    }
                 }
             }
         }
-
     }
 }

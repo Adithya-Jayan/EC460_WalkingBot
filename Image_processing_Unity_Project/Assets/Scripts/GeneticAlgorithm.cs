@@ -113,9 +113,14 @@ public class GeneticAlgorithm<T>
 		fitnessSum = 0;
 		DNA<T> best = Population[0];
 
+		//Calculating fitness
+		Run_Simulaton<T> sim = new Run_Simulaton<T>(Population);
+		float[] Calculated_Fitness = sim.Calculated_Fitness;
+
 		for (int i = 0; i < Population.Count; i++)
 		{
-			fitnessSum += Population[i].CalculateFitness(i); // CalculateFitness from DNA object
+			Population[i].Fitness = Calculated_Fitness[i];
+			fitnessSum += Population[i].Fitness; // CalculateFitness from DNA object
 
 			if (Population[i].Fitness > best.Fitness)
 			{

@@ -8,7 +8,7 @@ public class DNA<T> //<T> defines a generic datatype as input
 {
 	public T[] Genes { get; private set; } 
 	//Variable Genes of type T, get => can be read from anywhere, private set => Can only be set locally
-	public float Fitness { get; private set; }
+	public float Fitness { get; set; }
 
 	//Defining functions
 	private Random random;
@@ -33,12 +33,6 @@ public class DNA<T> //<T> defines a generic datatype as input
 				Genes[i] = getRandomGene();
 			}
 		}
-	}
-
-	public float CalculateFitness(int index)
-	{
-		Fitness = fitnessFunction(index);
-		return Fitness;
 	}
 
 	//Mix two parents
