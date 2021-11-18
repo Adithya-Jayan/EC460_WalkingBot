@@ -1,6 +1,6 @@
 ﻿//using System.Collections;
 //using System.Collections.Generic;
-//using UnityEngine;
+using UnityEngine;
 
 using System;
 using System.Collections.Generic;
@@ -16,13 +16,20 @@ public class GeneticAlgorithm
 	public float MutationRate;
 
 	private List<DNA> newPopulation;
-	private Random random;
+	private System.Random random;
 	private float fitnessSum;
 	private int dnaSize;
 	private Func<float> getRandomGene;
 
+	//simulation related
+	GameObject WalkerPrefab;
+	Transform Position_reference;
+	double duration;
+	float penalty;
+
 	//Constructor
-	public GeneticAlgorithm(int populationSize, int dnaSize, Random random, Func<float> getRandomGene,
+	public GeneticAlgorithm(int populationSize, int dnaSize, System.Random random, Func<float> getRandomGene,
+		 GameObject WalkerPrefab, Transform Position_reference, double duration, float penalty,
 		int elitism, float mutationRate = 0.01f)
 	{
 		Generation = 1;
@@ -33,6 +40,11 @@ public class GeneticAlgorithm
 		this.random = random;
 		this.dnaSize = dnaSize;
 		this.getRandomGene = getRandomGene;
+
+		this.WalkerPrefab = WalkerPrefab;
+		this.Position_reference = Position_reference;
+		this.duration = duration;
+		this.penalty = penalty;
 
 		BestGenes = new float[dnaSize];
 
@@ -112,7 +124,7 @@ public class GeneticAlgorithm
 		DNA best = Population[0];
 
 		//Calculating fitness
-		Run_Simulaton sim = new Run_Simulaton(Population);
+		Run_Simulaton sim = new Run_Simulaton(Population, WalkerPrefab, Position_reference, duration, penalty);
 		float[] Calculated_Fitness = sim.Calculated_Fitness;
 
 		for (int i = 0; i < Population.Count; i++)

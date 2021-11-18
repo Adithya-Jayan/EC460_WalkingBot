@@ -12,18 +12,24 @@ public class NN_Brain : MonoBehaviour
     public GameObject UpperLeg_L;
     public GameObject UpperLeg_R;
     public GameObject Torso;
+    double Duration;
 
     int[] Weights_shape = {30, 25, 20, 16, 8, 4 };
     float[] Weights;
     public float score = 0;
     float TimeSinceBirth = 0f;
-    [SerializeField] public bool collided = false; Add script to torso!!!
+    public bool collided = false;
+    float penalty;
 
-    public void Init(DNA dna, double duration)
+    public void Init(DNA dna, double duration, float negative_score)
     {
 
         //Assign weights
         Weights = dna.Genes;
+
+        penalty = negative_score;
+
+        Duration = duration;
 
         //Start brain function
         wait = false;
@@ -105,10 +111,14 @@ public class NN_Brain : MonoBehaviour
     {
         float height = Torso.GetComponent<Transform>().position.y;
 
-        if(!collided)
+        if (!collided)
         {
             score += height * Time.fixedDeltaTime;
             TimeSinceBirth += Time.fixedDeltaTime;
+        }
+        else 
+        {
+            score -= penalty * Time.fixedDeltaTime;
         }
 
         if (TimeSinceBirth >= Duration)

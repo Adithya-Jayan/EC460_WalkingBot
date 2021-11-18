@@ -9,11 +9,7 @@ public class Run_Simulaton : MonoBehaviour
     private List<GameObject> ObjectList = new List<GameObject>();
     public float field_size = 10f;
 
-    [SerializeField] GameObject WalkerPrefab;
-    [SerializeField] Transform Position_reference;
-    [SerializeField] double duration;
-
-    public Run_Simulaton(List<DNA> Pop)
+    public Run_Simulaton(List<DNA> Pop, GameObject WalkerPrefab, Transform Position_reference, double duration, float penalty)
     {
         Vector3 current_pos;
 
@@ -23,7 +19,7 @@ public class Run_Simulaton : MonoBehaviour
             current_pos = new Vector3(0.0f, 0.0f, field_size * i);
             Position_reference.position = current_pos;
             ObjectList.Add(Instantiate(WalkerPrefab, Position_reference));
-            ObjectList[-1].GetComponent<NN_Brain>().Init(Pop[i], duration);
+            ObjectList[i].GetComponent<NN_Brain>().Init(Pop[i], duration , penalty);
         }
 
         float sum = 0f;
@@ -46,19 +42,9 @@ public class Run_Simulaton : MonoBehaviour
         for (int i = 0; i < Pop.Count; i++)
         {
             Destroy(ObjectList[i]);
+            Debug.Log("Destroyed an object "+ i.ToString() );
         }
         ObjectList.Clear();
-
-    }
-
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 

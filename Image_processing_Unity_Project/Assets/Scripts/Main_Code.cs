@@ -11,20 +11,17 @@ using UnityEngine.UI;
 public class Main_Code : MonoBehaviour
 {
 	[Header("Genetic Algorithm")]
-	// [SerializeField] string targetString = "To be, or not to be, that is the question.";
-	// [SerializeField] string validCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,.|!#$%&/()=? ";
 	[SerializeField] int populationSize = 200;
+	[SerializeField] int dna_size = 1803;
 	[SerializeField] float mutationRate = 0.01f;
 	[SerializeField] int elitism = 5; //Number of best people to carry over without changing
 
-	[Header("Other")]
-	//[SerializeField] int numCharsPerText = 15000;
-	//[SerializeField] Text targetText;
-	//[SerializeField] Text bestText;
-	//[SerializeField] Text bestFitnessText;
-	//[SerializeField] Text numGenerationsText;
-	//[SerializeField] Transform populationTextParent;
-	//[SerializeField] Text textPrefab;
+	[Header("Simulation Parameters")]
+	[SerializeField] GameObject WalkerPrefab;
+	[SerializeField] Transform Position_reference;
+	[SerializeField] double duration;
+	[SerializeField] float penalty = 10;
+
 
 	private GeneticAlgorithm ga; // T is char here (We'll need to change it)
 	private System.Random random;
@@ -41,7 +38,9 @@ public class Main_Code : MonoBehaviour
 		*/
 
 		random = new System.Random();
-		ga = new GeneticAlgorithm(populationSize, targetString.Length, random, GetRandomWeight, elitism, mutationRate);
+		ga = new GeneticAlgorithm(populationSize, dna_size, random, GetRandomWeight,
+			WalkerPrefab, Position_reference, duration, penalty, 
+			elitism, mutationRate);
 		// Change parameters above!!!
 	}
 
@@ -64,65 +63,4 @@ public class Main_Code : MonoBehaviour
 		return i;
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-	private int numCharsPerTextObj;
-	private List<Text> textList = new List<Text>();
-
-	void Awake()
-	{
-		numCharsPerTextObj = numCharsPerText / validCharacters.Length;
-		if (numCharsPerTextObj > populationSize) numCharsPerTextObj = populationSize;
-
-		int numTextObjects = Mathf.CeilToInt((float)populationSize / numCharsPerTextObj);
-
-		for (int i = 0; i < numTextObjects; i++)
-		{
-			textList.Add(Instantiate(textPrefab, populationTextParent));
-		}
-	}
-
-	private void UpdateText(char[] bestGenes, float bestFitness, int generation, int populationSize, Func<int, char[]> getGenes)
-	{
-		bestText.text = CharArrayToString(bestGenes);
-		bestFitnessText.text = bestFitness.ToString();
-
-		numGenerationsText.text = generation.ToString();
-
-		for (int i = 0; i < textList.Count; i++)
-		{
-			var sb = new StringBuilder();
-			int endIndex = i == textList.Count - 1 ? populationSize : (i + 1) * numCharsPerTextObj;
-			for (int j = i * numCharsPerTextObj; j < endIndex; j++)
-			{
-				foreach (var c in getGenes(j))
-				{
-					sb.Append(c);
-				}
-				if (j < endIndex - 1) sb.AppendLine();
-			}
-
-			textList[i].text = sb.ToString();
-		}
-	}
-
-	private string CharArrayToString(char[] charArray)
-	{
-		var sb = new StringBuilder();
-		foreach (var c in charArray)
-		{
-			sb.Append(c);
-		}
-
-		return sb.ToString();
-	}
 }
