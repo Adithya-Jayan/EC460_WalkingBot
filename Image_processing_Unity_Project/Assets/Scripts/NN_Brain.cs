@@ -16,14 +16,15 @@ public class NN_Brain : MonoBehaviour
 
     int[] Weights_shape = {30, 25, 20, 16, 8, 4 };
     float[] Weights;
-    public float score = 0;
-    float TimeSinceBirth = 0f;
+    public float score = 0; 
+    public float TimeSinceBirth = 0f; //Exposed for debugging
     public bool collided = false;
     float penalty;
 
     public void Init(DNA dna, double duration, float negative_score)
     {
 
+        Debug.Log("Initing brainnnn!!");
         //Assign weights
         Weights = dna.Genes;
 
@@ -86,6 +87,10 @@ public class NN_Brain : MonoBehaviour
 
     private void ApplyTorque(List<float> activations)
     {
+        Debug.Log("Inside Apply Torque");
+        Debug.Log("activations length is "+ activations.Count.ToString());
+        for (int i= 0;i< activations.Count;i++)
+        Debug.Log("Activations are:" + activations[i].ToString());
         //Get motor objects
         var LowerLeg_L_motor = LowerLeg_L.GetComponent<HingeJoint>().motor;
         var LowerLeg_R_motor = LowerLeg_R.GetComponent<HingeJoint>().motor;
@@ -110,29 +115,28 @@ public class NN_Brain : MonoBehaviour
     private float Update_Score()
     {
         float height = Torso.GetComponent<Transform>().position.y;
+        TimeSinceBirth += Time.fixedDeltaTime;
+        if (!Completed)
+        {
+            if (!collided)
+            {
+                score += height * Time.fixedDeltaTime;
+            }
+            else
+            {
+                score -= penalty * Time.fixedDeltaTime;
+            }
 
-        if (!collided)
-        {
-            score += height * Time.fixedDeltaTime;
-            TimeSinceBirth += Time.fixedDeltaTime;
-        }
-        else 
-        {
-            score -= penalty * Time.fixedDeltaTime;
+            if (TimeSinceBirth >= Duration)
+            {
+                Completed = true;
+            }
+            
         }
 
-        if (TimeSinceBirth >= Duration)
-        {
-            Completed = true;
-        }
         return score; //Apply score
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -140,17 +144,20 @@ public class NN_Brain : MonoBehaviour
         //Incorporate height of head into the score calculation. (Along with time obviously)
 
         int current = 0; //current weight
+        
         if (wait == false)
-        {
+        {   
             List<float> Inputs = Read_inputs();
             Weights_shape[0] = Inputs.Count;
 
             List<float> Layer_input = Inputs;
             List<float> Layer_output = new List<float>();
 
+            Debug.Log("Entering loop");
             //Propogate Inputs through layers
             for (int i = 1; i < Weights_shape.Length; i++) //Loops through all the layers (-1 since Weights_shape includes inputs)
             {
+                Debug.Log("Layer "+ (i).ToString() + "Input size is: " + Layer_input.Count.ToString());
                 Layer_output.Clear();
 
                 for (int neuron = 0; neuron < Weights_shape[i]; neuron++) //iterate through each neuron
@@ -159,6 +166,7 @@ public class NN_Brain : MonoBehaviour
 
                     for (int ip = 0; ip < Layer_input.Count; ip++) //each input
                     {
+                        //Debug.Log("In loop level: "+i.ToString() + " " + neuron.ToString() + " " + ip.ToString() + " " + current.ToString());
                         neuron_output += Layer_input[ip] * Weights[current]; //adds weight component
                         current++;
                     }
@@ -168,19 +176,16 @@ public class NN_Brain : MonoBehaviour
 
                     Layer_output.Add(neuron_output);
                 }
-
+                Debug.Log("output is : " + Layer_output.Count.ToString());
                 Layer_input.Clear();
-                Layer_input = Layer_output;
+                Layer_input = new List<float>(Layer_output); // Corrected shallow copy to deep copy
 
             }
-
+            //Debug.Log("Done loop,Going to appy torque");
             ApplyTorque(Layer_output);
+            //Debug.Log("Done torque application, Updating score");
+            score = Update_Score();
 
         }
-
-
-        score = Update_Score();
-
-
     }
 }

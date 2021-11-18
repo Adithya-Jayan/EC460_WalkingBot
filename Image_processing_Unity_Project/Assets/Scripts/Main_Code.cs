@@ -22,30 +22,33 @@ public class Main_Code : MonoBehaviour
 	[SerializeField] double duration;
 	[SerializeField] float penalty = 10;
 
+	Func<float[]> Simulate;
+
 
 	private GeneticAlgorithm ga; // T is char here (We'll need to change it)
 	private System.Random random;
 
 	void Start()
 	{
-		/* targetText.text = targetString;
-		
-		/ if (string.IsNullOrEmpty(targetString))
-		{
-			Debug.LogError("Target string is null or empty");
-			this.enabled = false;
-		}
-		*/
-
+		Debug.Log("Started main_script");
 		random = new System.Random();
-		ga = new GeneticAlgorithm(populationSize, dna_size, random, GetRandomWeight,
-			WalkerPrefab, Position_reference, duration, penalty, 
+
+		ga = GetComponentInParent<GeneticAlgorithm>();
+		ga.Init(populationSize, dna_size, random, GetRandomWeight,
+			WalkerPrefab, Position_reference, duration, penalty,
 			elitism, mutationRate);
+		Debug.Log("ga inited");
+		Debug.Break();
 		// Change parameters above!!!
+		while (true)
+			Next_gen();
+
 	}
 
-	void Update()
+	void Next_gen()
 	{
+		Debug.Log("Started main_script update , generating new population");
+
 		ga.NewGeneration();
 
 		// UpdateText(ga.BestGenes, ga.BestFitness, ga.Generation, ga.Population.Count, (j) => ga.Population[j].Genes);
@@ -54,6 +57,7 @@ public class Main_Code : MonoBehaviour
 		{
 			this.enabled = false; //Shuts down simulation. Remember to save before this
 		}
+		Debug.Log("Completed pop_gen");
 	}
 
 	private float GetRandomWeight() //Getrandom gene equivalent

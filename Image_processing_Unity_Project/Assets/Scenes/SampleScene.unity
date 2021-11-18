@@ -464,6 +464,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1207384275}
   - component: {fileID: 1207384274}
+  - component: {fileID: 1207384277}
+  - component: {fileID: 1207384276}
   m_Layer: 0
   m_Name: Simulation_controller
   m_TagString: Untagged
@@ -483,10 +485,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2350f92b018895548b6e88fd2303ddb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  populationSize: 5
+  populationSize: 2
   dna_size: 1803
   mutationRate: 0.01
-  elitism: 5
+  elitism: 1
   WalkerPrefab: {fileID: 6221578526878375148, guid: 9fe0dd3f7fadbe74890c84f80b4a8f0c, type: 3}
   Position_reference: {fileID: 1845633546}
   duration: 10
@@ -505,6 +507,34 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1207384276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207384273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 379cb6bc8d0fbed488a28ba24e9f1426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Calculated_Fitness: []
+  field_size: 10
+--- !u!114 &1207384277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207384273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eacbe7000d319f84e9d6e6e2c0ba5228, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Elitism: 0
+  MutationRate: 0
 --- !u!1 &1845633545
 GameObject:
   m_ObjectHideFlags: 0

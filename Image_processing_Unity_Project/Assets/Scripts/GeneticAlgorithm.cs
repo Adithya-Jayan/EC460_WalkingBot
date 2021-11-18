@@ -1,11 +1,12 @@
 ﻿//using System.Collections;
 //using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using System;
 using System.Collections.Generic;
 
-public class GeneticAlgorithm
+public class GeneticAlgorithm : MonoBehaviour
 {
 	public List<DNA> Population { get; private set; }
 	public int Generation { get; private set; }
@@ -26,12 +27,12 @@ public class GeneticAlgorithm
 	Transform Position_reference;
 	double duration;
 	float penalty;
-
 	//Constructor
-	public GeneticAlgorithm(int populationSize, int dnaSize, System.Random random, Func<float> getRandomGene,
+	public void Init(int populationSize, int dnaSize, System.Random random, Func<float> getRandomGene,
 		 GameObject WalkerPrefab, Transform Position_reference, double duration, float penalty,
 		int elitism, float mutationRate = 0.01f)
 	{
+		//Debug.Log("GA Initing");
 		Generation = 1;
 		Elitism = elitism;
 		MutationRate = mutationRate;
@@ -57,6 +58,7 @@ public class GeneticAlgorithm
 
 	public void NewGeneration(int numNewDNA = 0, bool crossoverNewDNA = false)
 	{
+		//Debug.Log("Generating new generation");
 		int finalCount = Population.Count + numNewDNA;
 
 		if (finalCount <= 0)
@@ -104,6 +106,7 @@ public class GeneticAlgorithm
 	//Compares two DNAs for fitness
 	private int CompareDNA(DNA a, DNA b)
 	{
+		//Debug.Log("Comparing DNA");
 		if (a.Fitness > b.Fitness)
 		{
 			return -1;
@@ -120,12 +123,13 @@ public class GeneticAlgorithm
 
 	private void CalculateFitness()
 	{
+		//Debug.Log("Started fitness calc");
 		fitnessSum = 0;
 		DNA best = Population[0];
 
 		//Calculating fitness
-		Run_Simulaton sim = new Run_Simulaton(Population, WalkerPrefab, Position_reference, duration, penalty);
-		float[] Calculated_Fitness = sim.Calculated_Fitness;
+		//Debug.Log("Starting simulation");
+		float[] Calculated_Fitness = GetComponentInParent<Run_Simulaton>().Simulate(Population, WalkerPrefab, Position_reference, duration, penalty);
 
 		for (int i = 0; i < Population.Count; i++)
 		{
@@ -145,6 +149,7 @@ public class GeneticAlgorithm
 	// Pick a random element
 	private DNA ChooseParent()
 	{
+		//Debug.Log("Picking Parent");
 		double randomNumber = random.NextDouble() * fitnessSum;
 
 		for (int i = 0; i < Population.Count; i++)
