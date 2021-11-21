@@ -24,7 +24,7 @@ public class NN_Brain : MonoBehaviour
     public void Init(DNA dna, double duration, float negative_score)
     {
 
-        Debug.Log("Initing brainnnn!!");
+        //Debug.Log("Initing brainnnn!!");
         //Assign weights
         Weights = dna.Genes;
 
@@ -87,10 +87,11 @@ public class NN_Brain : MonoBehaviour
 
     private void ApplyTorque(List<float> activations)
     {
-        Debug.Log("Inside Apply Torque");
-        Debug.Log("activations length is "+ activations.Count.ToString());
-        for (int i= 0;i< activations.Count;i++)
-        Debug.Log("Activations are:" + activations[i].ToString());
+        //Debug.Log("Inside Apply Torque");
+        //Debug.Log("activations length is "+ activations.Count.ToString());
+        //for (int i= 0;i< activations.Count;i++)
+        //Debug.Log("Activations are:" + activations[i].ToString());
+
         //Get motor objects
         var LowerLeg_L_motor = LowerLeg_L.GetComponent<HingeJoint>().motor;
         var LowerLeg_R_motor = LowerLeg_R.GetComponent<HingeJoint>().motor;
@@ -114,7 +115,7 @@ public class NN_Brain : MonoBehaviour
 
     private float Update_Score()
     {
-        Debug.Log("Updating score");
+        //Debug.Log("Updating score");
         float height = Torso.GetComponent<Transform>().position.y;
         TimeSinceBirth += Time.fixedDeltaTime;
         if (!Completed)
@@ -154,11 +155,11 @@ public class NN_Brain : MonoBehaviour
             List<float> Layer_input = Inputs;
             List<float> Layer_output = new List<float>();
 
-            Debug.Log("Entering loop");
+            //Debug.Log("Entering loop");
             //Propogate Inputs through layers
             for (int i = 1; i < Weights_shape.Length; i++) //Loops through all the layers (-1 since Weights_shape includes inputs)
             {
-                Debug.Log("Layer "+ (i).ToString() + "Input size is: " + Layer_input.Count.ToString());
+                //Debug.Log("Layer "+ (i).ToString() + "Input size is: " + Layer_input.Count.ToString());
                 Layer_output.Clear();
 
                 for (int neuron = 0; neuron < Weights_shape[i]; neuron++) //iterate through each neuron
@@ -177,7 +178,7 @@ public class NN_Brain : MonoBehaviour
 
                     Layer_output.Add(neuron_output);
                 }
-                Debug.Log("output is : " + Layer_output.Count.ToString());
+                //Debug.Log("output is : " + Layer_output.Count.ToString());
                 Layer_input.Clear();
                 Layer_input = new List<float>(Layer_output); // Corrected shallow copy to deep copy
 

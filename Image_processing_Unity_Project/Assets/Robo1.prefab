@@ -20,6 +20,7 @@ MonoBehaviour:
   UpperLeg_R: {fileID: 6890522506460813791}
   Torso: {fileID: 3396398857740298825}
   score: 0
+  TimeSinceBirth: 0
   collided: 0
 --- !u!114 &3483674702075317182
 MonoBehaviour:
@@ -48,6 +49,10 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: 7.1054274e-15
       objectReference: {fileID: 0}
+    - target: {fileID: 697632612, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 697632613, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
       propertyPath: m_ConnectedAnchor.y
       value: 0.00000005960464
@@ -56,6 +61,22 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: 7.1054274e-15
       objectReference: {fileID: 0}
+    - target: {fileID: 697632614, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 697632614, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 697632614, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 697632615, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 697632616, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
       propertyPath: m_ConnectedAnchor.y
       value: 0.00000059604645
@@ -64,6 +85,10 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: -0.49999997
       objectReference: {fileID: 0}
+    - target: {fileID: 697632617, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 697632618, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
       propertyPath: m_ConnectedAnchor.y
       value: 0.00000059604645
@@ -71,6 +96,10 @@ PrefabInstance:
     - target: {fileID: 697632618, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
       propertyPath: m_ConnectedAnchor.z
       value: -0.49999997
+      objectReference: {fileID: 0}
+    - target: {fileID: 697632619, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4022496024539867919, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
       propertyPath: m_RootOrder
@@ -118,7 +147,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4366546048021098933, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}
       propertyPath: m_Name
-      value: Walker_model
+      value: Robo1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1625071935, guid: e03e7f055764adc4caa3c23ff18ff59a, type: 3}

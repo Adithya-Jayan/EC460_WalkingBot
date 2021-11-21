@@ -10,52 +10,42 @@ public class Run_Simulaton : MonoBehaviour
     public List<float> Calculated_Fitness;
     private List<GameObject> ObjectList = new List<GameObject>();
     public float field_size = 10;
+    List<DNA> Pop;
 
-    public List<float> Simulate(List<DNA> Pop, GameObject WalkerPrefab, Transform Position_reference, double duration, float penalty)
+    public void Simulate(List<DNA> Pop, GameObject WalkerPrefab, Transform Position_reference, double duration, float penalty)
     {
         Vector3 current_pos;
-        //Debug.Log("Instantiating objects");
+        this.Pop = Pop;
+
         //Instantiate all the walker objects with their DNA
         for (int i = 0; i < Pop.Count; i++)
         {
-
-            //Debug.Log(i.ToString());
-
-
-            current_pos = new Vector3(0.0f, 0.0f, field_size * i);
+            int x_pos = (i / 10);
+            int z_pos = (i % 10);
+            current_pos = new Vector3(field_size * x_pos , 0.0f , field_size * z_pos);
             Position_reference.position = current_pos;
 
-            //Debug.Break();
-            ObjectList.Add(Instantiate(WalkerPrefab, Position_reference));
+            //Debug.Log("Instantiated object" + (i + 1).ToString() + " at " + current_pos.ToString());
 
-            //Debug.Break();
-            ObjectList[i].GetComponent<NN_Brain>().Init(Pop[i], duration, penalty); //<-- something wrong here
+            ObjectList.Add(Instantiate(WalkerPrefab, Position_reference,true));
 
-            //Debug.Break();
-
+            ObjectList[i].GetComponent<NN_Brain>().Init(Pop[i], duration, penalty);
         }
+        //Debug.Log("Instantiated all objects");
+    }
 
-        //ObjectList[-1].GetComponent<NN_Brain>().Init(Pop[-1], duration, penalty); // << === Error on purpose
-
-
+    public List<float> GetScore()
+    {
         //Obtain score from brain
         //
-
         float sum = 0f;
         for (int i = 0; i < Pop.Count; i++)
         {
-            /*
-            
-            */
-            Thread.Sleep(10000);
-
-            Debug.Log("Reading fitness while completed :" + ObjectList[i].GetComponent<NN_Brain>().Completed.ToString());
             Calculated_Fitness.Add(ObjectList[i].GetComponent<NN_Brain>().score);
-            Debug.Log(Calculated_Fitness[i].ToString());
             sum += Calculated_Fitness[i];
         }
         //Incorporate normalization
-
+        //Debug.Log("Normalizing score");
         for (int i = 0; i < Calculated_Fitness.Count; i++)
         {
             Calculated_Fitness[i] = Calculated_Fitness[i] / sum;
@@ -65,14 +55,23 @@ public class Run_Simulaton : MonoBehaviour
         for (int i = 0; i < ObjectList.Count; i++)
         {
             Destroy(ObjectList[i]);
-            Debug.Log("Destroyed an object " + i.ToString());
+            //Debug.Log("Destroyed an object " + i.ToString());
         }
         ObjectList.Clear();
 
         return Calculated_Fitness;
     }
 
-    /*
-    
-    */
+    public bool Check()
+    {
+        bool result = true;
+
+        for (int i = 0; i < ObjectList.Count; i++)
+        {
+            result = result && ObjectList[i].GetComponent<NN_Brain>().Completed;
+        }
+
+
+        return result;
+    }
 }

@@ -4,9 +4,11 @@
 
 using System;
 
+//[System.Serializable]
 public class DNA //<T> defines a generic datatype as input
 {
-	public float[] Genes { get; private set; } 
+	public float[] Genes { get; private set; }
+	int[] weights_shape = { 30, 25, 20, 16, 8, 4 };
 	//Variable Genes of type T, get => can be read from anywhere, private set => Can only be set locally
 	public float Fitness { get; set; }
 
@@ -29,6 +31,12 @@ public class DNA //<T> defines a generic datatype as input
 			for (int i = 0; i < Genes.Length; i++)
 			{
 				Genes[i] = getRandomGene();
+
+				if (i < 775) Genes[i] /= 31;
+				else if (i < 1295) Genes[i] /= 26;
+				else if (i < 1631) Genes[i] /= 21;
+				else if (i < 1767) Genes[i] /= 17;
+				else Genes[i] /= 9;
 			}
 		}
 	}
@@ -52,7 +60,7 @@ public class DNA //<T> defines a generic datatype as input
 		{
 			if (random.NextDouble() < mutationRate)
 			{
-				Genes[i] = getRandomGene();
+				Genes[i] = Genes[i] + getRandomGene()/20;
 			}
 		}
 	}

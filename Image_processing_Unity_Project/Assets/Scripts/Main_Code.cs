@@ -8,7 +8,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 
 public class Main_Code : MonoBehaviour
 {
@@ -17,6 +17,7 @@ public class Main_Code : MonoBehaviour
 	[SerializeField] int dna_size = 1803;
 	[SerializeField] float mutationRate = 0.01f;
 	[SerializeField] int elitism = 5; //Number of best people to carry over without changing
+	[SerializeField] bool crossover = false;
 
 	[Header("Simulation Parameters")]
 	[SerializeField] GameObject WalkerPrefab;
@@ -25,47 +26,62 @@ public class Main_Code : MonoBehaviour
 	[SerializeField] float penalty = 10;
 
 	Func<float[]> Simulate;
-
+	bool running = false;
 
 	private GeneticAlgorithm ga; // T is char here (We'll need to change it)
 	private System.Random random;
 
 	void Start()
 	{
-		Debug.Log("Started main_script");
+		//Debug.Log("Started main_script");
 		random = new System.Random();
 
 		ga = GetComponentInParent<GeneticAlgorithm>();
 		ga.Init(populationSize, dna_size, random, GetRandomWeight,
 			WalkerPrefab, Position_reference, duration, penalty,
 			elitism, mutationRate);
-		Debug.Log("ga inited");
-		Debug.Break();
-		// Change parameters above!!!
+		//Debug.Log("ga inited");
 
-		var tcs = new TaskCompletionSource<Vector3>();
-		Task.Run(async () =>
-		{
-			Debug.Log("Task started");
-			tcs.SetResult(await LongRunningTask());
-			Debug.Log("Task stopped");
-		});
+		//Debug.Log("Reading from savefile");
+		//ga.SaveToFile();
 
+		running = false;
 	}
 
-	void Next_gen()
+    private void FixedUpdate()
+    {
+		running = Next_gen(running);
+	}
+
+
+    bool Next_gen(bool running)
 	{
-		Debug.Log("Started main_script update , generating new population");
-
-		ga.NewGeneration();
-
-		// UpdateText(ga.BestGenes, ga.BestFitness, ga.Generation, ga.Population.Count, (j) => ga.Population[j].Genes);
-
-		if (ga.BestFitness == 1)
+		if (!running)
 		{
-			this.enabled = false; //Shuts down simulation. Remember to save before this
+			//Debug.Log("Creating new generation");
+			ga.NewGeneration();
+			running = true;
+			//Debug.Log("Started running");
 		}
-		Debug.Log("Completed pop_gen");
+
+		else
+		{
+			if (ga.CheckIfCompleted(crossover))
+			{
+				running = false;
+				Debug.Log("Saving to file");
+				ga.SaveToFile();
+
+				if (ga.BestFitness == 1)
+				{
+					this.enabled = false; //Shuts down simulation. Remember to save before this
+				}
+				//Debug.Log("Finished running");
+			}
+			
+		}
+
+		return running;
 	}
 
 	private float GetRandomWeight() //Getrandom gene equivalent
@@ -75,7 +91,7 @@ public class Main_Code : MonoBehaviour
 		return i;
 	}
 
-	async Task<Vector3> LongRunningTask()
+	/*async Task<Vector3> LongRunningTask()
 	{
 		var v = Vector3.zero;
 
@@ -83,6 +99,6 @@ public class Main_Code : MonoBehaviour
 			Next_gen();	//Wait till calculation is complete
 
 		return v;
-	}
+	}*/
 
 }
