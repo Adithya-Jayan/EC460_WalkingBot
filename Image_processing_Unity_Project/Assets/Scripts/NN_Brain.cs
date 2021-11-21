@@ -114,6 +114,7 @@ public class NN_Brain : MonoBehaviour
 
     private float Update_Score()
     {
+        Debug.Log("Updating score");
         float height = Torso.GetComponent<Transform>().position.y;
         TimeSinceBirth += Time.fixedDeltaTime;
         if (!Completed)

@@ -8,6 +8,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
+using System.Threading.Tasks;
+
 public class Main_Code : MonoBehaviour
 {
 	[Header("Genetic Algorithm")]
@@ -40,8 +42,14 @@ public class Main_Code : MonoBehaviour
 		Debug.Log("ga inited");
 		Debug.Break();
 		// Change parameters above!!!
-		while (true)
-			Next_gen();
+
+		var tcs = new TaskCompletionSource<Vector3>();
+		Task.Run(async () =>
+		{
+			Debug.Log("Task started");
+			tcs.SetResult(await LongRunningTask());
+			Debug.Log("Task stopped");
+		});
 
 	}
 
@@ -65,6 +73,16 @@ public class Main_Code : MonoBehaviour
 		float i = (float)random.NextDouble();
 		//int i = random.Next(validCharacters.Length);
 		return i;
+	}
+
+	async Task<Vector3> LongRunningTask()
+	{
+		var v = Vector3.zero;
+
+		while (true)
+			Next_gen();	//Wait till calculation is complete
+
+		return v;
 	}
 
 }

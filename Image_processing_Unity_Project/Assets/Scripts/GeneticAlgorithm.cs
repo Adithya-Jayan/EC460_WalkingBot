@@ -129,7 +129,7 @@ public class GeneticAlgorithm : MonoBehaviour
 
 		//Calculating fitness
 		//Debug.Log("Starting simulation");
-		float[] Calculated_Fitness = GetComponentInParent<Run_Simulaton>().Simulate(Population, WalkerPrefab, Position_reference, duration, penalty);
+		List<float> Calculated_Fitness = GetComponentInParent<Run_Simulaton>().Simulate(Population, WalkerPrefab, Position_reference, duration, penalty);
 
 		for (int i = 0; i < Population.Count; i++)
 		{
