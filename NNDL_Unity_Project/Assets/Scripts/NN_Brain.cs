@@ -19,6 +19,10 @@ public class NN_Brain : MonoBehaviour
     public float score = 0; 
     public float TimeSinceBirth = 0f; //Exposed for debugging
     public bool collided = false;
+
+    public bool grounded_l = false;
+    public bool grounded_r = false;
+
     float penalty;
 
     public void Init(DNA dna, double duration, float negative_score)
@@ -120,12 +124,13 @@ public class NN_Brain : MonoBehaviour
         TimeSinceBirth += Time.fixedDeltaTime;
         if (!Completed)
         {
-            if (!collided)
+            if ( (!collided) && (grounded_l || grounded_r))
             {
-                score += height * Time.fixedDeltaTime;
+                score += height * height * Time.fixedDeltaTime;
             }
             else
             {
+                score += height * height * Time.fixedDeltaTime;
                 score -= penalty * Time.fixedDeltaTime;
             }
 
@@ -180,7 +185,7 @@ public class NN_Brain : MonoBehaviour
                 }
                 //Debug.Log("output is : " + Layer_output.Count.ToString());
                 Layer_input.Clear();
-                Layer_input = new List<float>(Layer_output); // Corrected shallow copy to deep copy
+                Layer_input = Activation(Layer_output); // Corrected shallow copy to deep copy
 
             }
             //Debug.Log("Done loop,Going to appy torque");
@@ -189,5 +194,17 @@ public class NN_Brain : MonoBehaviour
             score = Update_Score();
 
         }
+    }
+
+    private List<float> Activation(List<float> Unactivated)
+    {
+        List<float> Activated = new List<float>();
+
+        for (int i = 0; i < Unactivated.Count; i++)
+        {
+            float x = Mathf.Exp(-1 * Unactivated[i]);
+            Activated.Add(1/(1+x));
+        }
+        return Activated;
     }
 }

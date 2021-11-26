@@ -38,18 +38,20 @@ public class Run_Simulaton : MonoBehaviour
     {
         //Obtain score from brain
         //
-        float sum = 0f;
+        //float sum = 0f;
+        Calculated_Fitness = new List<float>();
         for (int i = 0; i < Pop.Count; i++)
         {
             Calculated_Fitness.Add(ObjectList[i].GetComponent<NN_Brain>().score);
-            sum += Calculated_Fitness[i];
+            //sum += Calculated_Fitness[i];
         }
         //Incorporate normalization
         //Debug.Log("Normalizing score");
-        for (int i = 0; i < Calculated_Fitness.Count; i++)
+
+        /*for (int i = 0; i < Calculated_Fitness.Count; i++)
         {
-            Calculated_Fitness[i] = Calculated_Fitness[i] / sum;
-        }
+            Calculated_Fitness[i] = Calculated_Fitness[i]/ Mathf.Abs(sum);
+        }*/
 
         //Delete all the objects
         for (int i = 0; i < ObjectList.Count; i++)

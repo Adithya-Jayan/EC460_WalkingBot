@@ -60,8 +60,14 @@ public class DNA //<T> defines a generic datatype as input
 		{
 			if (random.NextDouble() < mutationRate)
 			{
-				Genes[i] = Genes[i] + getRandomGene()/20;
+				//Genes[i] = Genes[i] + getRandomGene()/20;
+				Genes[i] = Genes[i] + getRandomGene()/10;
 			}
 		}
+	}
+
+	public void SetGene(float[] bestgenes)
+	{
+		Genes = bestgenes;
 	}
 }

@@ -25,6 +25,11 @@ public class Main_Code : MonoBehaviour
 	[SerializeField] double duration;
 	[SerializeField] float penalty = 10;
 
+	[Header("Text UI")]
+	[SerializeField] Text BestScore_disp;
+	[SerializeField] Text Generation_disp;
+	[SerializeField] bool LoadFromFile;	
+
 	Func<float[]> Simulate;
 	bool running = false;
 
@@ -40,6 +45,9 @@ public class Main_Code : MonoBehaviour
 		ga.Init(populationSize, dna_size, random, GetRandomWeight,
 			WalkerPrefab, Position_reference, duration, penalty,
 			elitism, mutationRate);
+
+		if (LoadFromFile)
+			ga.LoadFile(populationSize);
 		//Debug.Log("ga inited");
 
 		//Debug.Log("Reading from savefile");
@@ -69,13 +77,17 @@ public class Main_Code : MonoBehaviour
 			if (ga.CheckIfCompleted(crossover))
 			{
 				running = false;
-				Debug.Log("Saving to file");
+				//Debug.Log("Saving to file");
 				ga.SaveToFile();
 
-				if (ga.BestFitness == 1)
+				BestScore_disp.text = "Best Score: "+ ga.BestFitness.ToString();
+				Generation_disp.text = "Generation: " + ga.Generation.ToString();
+
+				/*if (ga.BestFitness == 1)
 				{
 					this.enabled = false; //Shuts down simulation. Remember to save before this
-				}
+				}*/
+
 				//Debug.Log("Finished running");
 			}
 			
@@ -87,8 +99,7 @@ public class Main_Code : MonoBehaviour
 	private float GetRandomWeight() //Getrandom gene equivalent
 	{
 		float i = (float)random.NextDouble();
-		//int i = random.Next(validCharacters.Length);
-		return i;
+		return (2*i - 1);
 	}
 
 	/*async Task<Vector3> LongRunningTask()

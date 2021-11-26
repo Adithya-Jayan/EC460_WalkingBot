@@ -28,14 +28,15 @@ public class GeneticAlgorithm : MonoBehaviour
 	//simulation related
 	GameObject WalkerPrefab;
 	Transform Position_reference;
-	double duration;
+	public double duration;
 	float penalty;
 	public string Save_destination;
 
-	private void Start()
+	private void Awake()
     {
 		//Debug.Log("Creating Save Destination (Created GA object)");
-		Save_destination = Application.persistentDataPath + "/save.dat";
+		//Save_destination = Application.persistentDataPath + "/save.dat";
+		Save_destination = "save.dat";
 	}
 
 
@@ -73,7 +74,6 @@ public class GeneticAlgorithm : MonoBehaviour
 	public void NewGeneration()
 	{
 		//Debug.Log("Generating new generation");
-
 		StartSimulation(); // Calculate BestGenes and BestFitness
 
 	}
@@ -95,7 +95,7 @@ public class GeneticAlgorithm : MonoBehaviour
 				{
 					newPopulation.Add(Population[i]);
 				}
-				else if (i < Population.Count || crossoverNewDNA) //crossoverNewDNA decides if new non elite members are crosss over or fresh
+				else if ((i < Population.Count) && crossoverNewDNA) //crossoverNewDNA decides if new non elite members are crosss over or fresh
 				{
 					DNA parent1 = ChooseParent();
 					DNA parent2 = ChooseParent();
@@ -117,6 +117,7 @@ public class GeneticAlgorithm : MonoBehaviour
 			newPopulation = tmpList;
 
 			Generation++;
+			Debug.Log("Generation: " + Generation.ToString());
 
 		}
 
@@ -161,6 +162,7 @@ public class GeneticAlgorithm : MonoBehaviour
 			//Calculating fitness
 			List<float> Calculated_Fitness = GetComponentInParent<Run_Simulaton>().GetScore();
 
+			BestFitness = 0f;
 			for (int i = 0; i < Population.Count; i++)
 			{
 				Population[i].Fitness = Calculated_Fitness[i];
@@ -173,6 +175,7 @@ public class GeneticAlgorithm : MonoBehaviour
 			}
 
 			BestFitness = best.Fitness;
+			Debug.Log(BestFitness);
 			best.Genes.CopyTo(BestGenes, 0);
 		}
 
@@ -184,6 +187,8 @@ public class GeneticAlgorithm : MonoBehaviour
 	// Pick a random element
 	private DNA ChooseParent()
 	{
+
+		/*
 		//Debug.Log("Picking Parent");
 		double randomNumber = random.NextDouble() * fitnessSum;
 
@@ -196,8 +201,13 @@ public class GeneticAlgorithm : MonoBehaviour
 
 			randomNumber -= Population[i].Fitness;
 		}
-
 		return null;
+
+		 */
+
+		int i = random.Next(0, Elitism);
+		return Population[i];
+		
 	}
 
 	public void SaveToFile()
@@ -213,19 +223,28 @@ public class GeneticAlgorithm : MonoBehaviour
 		file.Close();
 	}
 
-	public void LoadFile()
+	public void LoadFile(int populationSize)
 	{
 		FileStream file;
 
 		if (File.Exists(Save_destination)) file = File.OpenRead(Save_destination);
 		else
 		{
-			Debug.LogError("File not found");
+			Debug.LogError("File not found :" + Save_destination);
 			return;
 		}
 
 		BinaryFormatter bf = new BinaryFormatter();
 		BestGenes = (float[])bf.Deserialize(file);
+
+		Population = new List<DNA>();
+		for (int i = 0; i < populationSize; i++)
+		{
+			Population.Add(new DNA(dnaSize, random, getRandomGene, shouldInitGenes: false));
+			Population[i].SetGene(BestGenes);
+		}
+		
+
 		file.Close();
 	}
 
